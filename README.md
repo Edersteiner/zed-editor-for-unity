@@ -6,6 +6,8 @@ The purpose of the fork is to support Windows platforms.
 Not tested on MacOS or linux yet so it is unknown if the original plugins functionality on those platforms still works.
 Use the original plugin for MacOS and linux.
 
+With some more work, I would like to push this to the original plugin.
+
 Original plugin: https://github.com/maligan/unity-zed
 
 ```sh
