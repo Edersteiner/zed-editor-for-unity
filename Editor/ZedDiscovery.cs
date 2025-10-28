@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Xml.XPath;
 using System.Text;
 using NiceIO;
+using System.Diagnostics;
+using System;
 
 namespace UnityZed
 {
@@ -33,8 +35,14 @@ namespace UnityZed
 
                 // [Linux] (Official Website)
                 (NPath.HomeDirectory.Combine(".local/bin/zed"), null),
-            };
 
+                // [Windows] (Installed in program files)
+                ("C:/Program Files/Zed/zed.exe", null),
+                ("C:/Program Files (x86)/Zed/zed.exe", null),
+
+                // [Windows] (Installed in AppData)
+                ("C:/Users/" + Environment.UserName + "/AppData/Local/Programs/Zed/zed.exe", null),
+            };
             foreach (var candidate in candidates)
             {
                 var candidatePath = candidate.path;

@@ -17,7 +17,6 @@ namespace UnityZed
         {
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-
             var package = UnityEditor.PackageManager.PackageInfo.FindForAssembly(GetType().Assembly);
 
             var style = new GUIStyle
@@ -26,8 +25,23 @@ namespace UnityZed
                 margin = new RectOffset(0, 4, 0, 0)
             };
 
-            GUILayout.Label($"<size=10><color=grey>{package.displayName} v{package.version} enabled</color></size>", style);
+            // PackageInfo.FindForAssembly may return null in some editor contexts (preferences window,
+            // Unity domain reload state). Guard against null to avoid NullReferenceException.
+            if (package != null)
+                GUILayout.Label($"<size=10><color=grey>{package.displayName} v{package.version} enabled</color></size>", style);
+            else
+                GUILayout.Label("<size=10><color=grey>Zed Editor (package info unavailable)</color></size>", style);
             GUILayout.EndHorizontal();
+
+            // If generator is not available yet (preferences shown before Initialize), show info and skip controls
+            if (m_Generator == null)
+            {
+                EditorGUILayout.LabelField("Generate .csproj files for:");
+                EditorGUI.indentLevel++;
+                EditorGUILayout.HelpBox("Project generation is not available until the code editor is initialized.", MessageType.Info);
+                EditorGUI.indentLevel--;
+                return;
+            }
 
             EditorGUILayout.LabelField("Generate .csproj files for:");
             EditorGUI.indentLevel++;

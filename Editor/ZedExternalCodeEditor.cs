@@ -88,6 +88,32 @@ namespace UnityZed
         //
 
         public void OnGUI()
-            => m_Preferences.OnGUI();
+        {
+            // Preferences UI may be displayed by Unity before Initialize(...) is called.
+            // Lazily ensure required fields are created so the preferences view can render
+            // without throwing NullReferenceException.
+            if (m_Generator == null)
+            {
+                try
+                {
+                    m_Generator = CreateSdkStyleGeneration();
+                }
+                catch (Exception)
+                {
+                    m_Generator = null;
+                }
+            }
+
+            if (m_Preferences == null)
+                m_Preferences = new ZedPreferences(m_Generator);
+
+            if (m_Settings == null)
+                m_Settings = new ZedSettings();
+
+            if (m_Process == null)
+                m_Process = new ZedProcess(string.Empty);
+
+            m_Preferences.OnGUI();
+        }
     }
 }
